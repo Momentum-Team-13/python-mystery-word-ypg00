@@ -14,7 +14,6 @@ def play_game():
         guesses_list.append(guess)
         # Casting the list of guesses as a string for cleaner terminal presentation
         guesses_str = str(' '.join(guesses_list))
-
         # Check guesses_list against ANSWER_LIST for matches
         display_list = [(char.replace(char, "_")) if char not in guesses_list else char for char in ANSWER_LIST]
         # Casting the list as a string for cleaner terminal presentation
@@ -30,18 +29,9 @@ def play_game():
         print(f'Guesses: {guesses_str}\n')
         print(f'Mystery Word: {display_str}\n')
 
-        # Check if solved (i.e. Win Message)
-        if display_list == ANSWER_LIST:
-            print('\nYou solved it!\n')
-            print(f'The Mystery Word was {ANSWER_STR}.\n')
-            break
+        # Check condition
+        check_if_win_or_lose(ANSWER_LIST, ANSWER_STR, display_list, turns_remaining)
 
-    # Lose Message
-    if turns_remaining == 0:
-        print('\nYou ran out of turns...\n')
-        print(f'The Mystery Word was {ANSWER_STR}.\n')
-        exit()
-    
 def decide_to_play():
     print('\n' + ('#' * 80) + '\n')
     decision_to_play = input('Would you like to play Mystery Word, Y/N? ').upper()
@@ -81,7 +71,6 @@ def generate_word_for_game():
 
 def guess_letter(guesses_list):
     guess = input('Guess a letter: ').upper()
-
     # Validating the guess
     if len(guess) != 1:
         print('\nGuess a single letter at a time.\n')
@@ -90,13 +79,25 @@ def guess_letter(guesses_list):
         print('\nYour guess must be a letter.\n')
         return guess_letter(guesses_list)
     elif guess in guesses_list:
-        print(f'\nYou\'ve already guessed {guess}, try again.' + '\n')
+        print(f'\nYou\'ve already guessed {guess}, try again.\n')
         return guess_letter(guesses_list)
     else:
         return guess
 
-def check_if_win_or_lose():
-    pass
+def check_if_win_or_lose(ANSWER_LIST, ANSWER_STR, display_list, turns_remaining):
+    # Winning condition
+    if display_list == ANSWER_LIST:
+        print('\nYou solved it!\n')
+        print(f'The Mystery Word was {ANSWER_STR}.\n')
+        exit()
+    # Losing condition
+    elif turns_remaining == 0:
+        print('\nYou ran out of turns...\n')
+        print(f'The Mystery Word was {ANSWER_STR}.\n')
+        exit()
+    # Continuation condition
+    else:
+        pass
 
 if __name__ == "__main__":
     play_game()
