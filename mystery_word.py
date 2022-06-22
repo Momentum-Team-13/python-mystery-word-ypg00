@@ -2,63 +2,79 @@ import random
 
 def decide_to_play():
     print('#' * 80)
-    print('Would you like to play Mystery Word, Y/N?')
-    deciding_to_play = input()
+    print(f'Would you like to play Mystery Word, Y/N?')
+    decision_to_play = input()
 
-    if deciding_to_play == 'y' or deciding_to_play == 'Y':
+    if decision_to_play == 'y' or decision_to_play == 'Y':
         play_game()
-    elif deciding_to_play == 'n' or deciding_to_play == 'N':
+    elif decision_to_play == 'n' or decision_to_play == 'N':
         print('Well, okay then...')
         print('#' * 80)
     else:
-        play_decision()
+        decide_to_play()
 
 def play_game():
-    print_game_instructions()
-    answer = generate_word_for_game()
-
-    print(f'Answer: {answer}')
-    print('_' * len(answer))
+    answer_str = generate_word_for_game()
+    answer_list = list(answer_str)
+    # print(f'answer_list: {answer_list}')
+    
+    print_game_instructions(answer_str)
 
     guesses = []
+    turns_remaining = 8
+
     while len(guesses) < 8:
-        guesses.append(guess_character())
+        guess_character(guesses)
+        print(f'Guesses: {guesses}')
+        turns_remaining -= 1
+        print(f'Turns remaining: {turns_remaining}\n')
+        #check guesses list against answer
+        display_list = [char for char in guesses if char in answer_list]
+        print(f'Mystery Word: {display_list}')
     
-    print(f'guesses: {guesses}')
-    
-    #check guesses list against answer
-    new_list = [char for char in guesses if char in answer]
-    print(new_list)
 
-
-    #render new result
-    #
-
-
-def print_game_instructions():
+def print_game_instructions(answer_str):
     print('#' * 80)
     print('Instructions:')
-    print('1. You will have 8 turns, or guesses, at characters for the answer.')
-    print('2. You can guess the word at the end of every turn.')
+    print('1. You will have 8 turns at guessing characters for the answer.')
+    print('2. You can try to guess the mystery word at the end of every turn.\n')
+    print(f'Answer: {str(answer_str)}')
+    print(f'Mystery Word length: {len(answer_str)} characters')
+    print('Mystery Word: ' + ('_ ' * len(answer_str)))
     print('#' * 80)
+    # print('\n')
 
 def generate_word_for_game():
     # Open words.txt as read
     file = 'words.txt'
     with open(file) as open_file:
         read_file = open_file.read()
-
     # Turn the file into a list of strings
-    word_list = str.split(read_file)
+    list_of_available_words = str.split(read_file)
+    # Create an random index number
+    index = random.randint(0, (len(list_of_available_words) - 1))
+    # Select a word for the game using the random index number
+    word_for_game_as_str = list_of_available_words[index]
+    # Uppercase the string
+    upper_word_for_game_as_str = word_for_game_as_str.upper()
+    # Return word, as a list, for the game
+    return upper_word_for_game_as_str
 
-    # Select and return a random word from the list
-    index = random.randint(0, (len(word_list) - 1))
-    answer = word_list[index]
-    return answer
+def guess_character(guesses):
+    guess = input('Guess a letter: ')
+    if validate_guess(guess) == False:
+        guess_character(guesses)
+    else: 
+        guess = guess.upper()
+        return guesses.append(guess)
 
-def guess_character():
-    guess = input('Guess a letter:\n')
-    return guess
+def validate_guess(guess):
+    if len(guess) != 1:
+        print('\nGuess a single letter at a time.')
+        return False
+    elif guess.isalpha() == False:
+        print('\nYour guess must be a letter.')
+        return False
 
 if __name__ == "__main__":
     decide_to_play()
