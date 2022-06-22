@@ -29,7 +29,7 @@ def play_game():
         turns_remaining -= 1
         print(f'Turns remaining: {turns_remaining}\n')
         #check guesses list against answer
-        display_list = [char for char in guesses if char in answer_list]
+        display_list = [(char.replace(char, "_ ")) if char not in guesses else char for char in answer_list]
         print(f'Mystery Word: {display_list}')
     
 
