@@ -16,25 +16,25 @@ def decide_to_play():
 def play_game():
     answer_str = generate_word_for_game()
     answer_list = list(answer_str)
-    # print(f'answer_list: {answer_list}')
     
     print_game_instructions(answer_str)
 
-    guesses = []
+    guesses_list = []
     turns_remaining = 8
 
-    while len(guesses) < 8:
-        guess_character(guesses)
-        guesses_str = ' '.join(guesses)
-        print(f'Guesses: {guesses_str}')
+    for turn in range(turns_remaining):
+        guess_character(guesses_list)
+        guesses_str = ' '.join(guesses_list)
         turns_remaining -= 1
-        print(f'Turns remaining: {turns_remaining}\n')
-        #check guesses list against answer
-        display_list = [(char.replace(char, "_")) if char not in guesses else char for char in answer_list]
-        display_str = ' '.join(display_list)
-        print(f'Mystery Word: {display_str}')
-    
 
+        # Check guesses_list list against answer
+        display_list = [(char.replace(char, "_")) if char not in guesses_list else char for char in answer_list]
+        display_str = ' '.join(display_list)
+
+        print(f'\nTurns remaining: {turns_remaining}')
+        print(f'Guesses: {guesses_str}')
+        print(f'Mystery Word: {display_str}\n')
+    
 def print_game_instructions(answer_str):
     print('#' * 80)
     print('Instructions:')
@@ -44,7 +44,7 @@ def print_game_instructions(answer_str):
     print(f'Mystery Word length: {len(answer_str)} characters')
     print('Mystery Word: ' + ('_ ' * len(answer_str)))
     print('#' * 80)
-    # print('\n')
+    print('\n')
 
 def generate_word_for_game():
     # Open words.txt as read
@@ -62,13 +62,13 @@ def generate_word_for_game():
     # Return word, as a list, for the game
     return upper_word_for_game_as_str
 
-def guess_character(guesses):
+def guess_character(guesses_list):
     guess = input('Guess a letter: ')
     if validate_guess(guess) == False:
-        guess_character(guesses)
+        guess_character(guesses_list)
     else: 
         guess = guess.upper()
-        return guesses.append(guess)
+        return guesses_list.append(guess)
 
 def validate_guess(guess):
     if len(guess) != 1:
