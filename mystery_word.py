@@ -61,20 +61,25 @@ def print_game_instructions(answer_str):
     print(('#' * 80) + '\n')
 
 def generate_word_for_game():
-    # Open words.txt as read
-    file = 'test-word.txt'
+    # Open file as read
+    file = 'words.txt'
     with open(file) as open_file:
         read_file = open_file.read()
+
     # Turn the file into a list of strings
-    list_of_available_words = str.split(read_file)
+    available_words = str.split(read_file)
+
     # Create an random index number
-    index = random.randint(0, (len(list_of_available_words) - 1))
+    index = random.randint(0, (len(available_words) - 1))
+
     # Select a word for the game using the random index number
-    word_for_game_as_str = list_of_available_words[index]
+    word_str = available_words[index]
+
     # Uppercase the string
-    upper_word_for_game_as_str = word_for_game_as_str.upper()
-    # Return word, as a list, for the game
-    return upper_word_for_game_as_str
+    word_str_upper = word_str.upper()
+    
+    # Return word for the game
+    return word_str_upper
 
 def guess_character(guesses_list):
     guess = input('Guess a letter: ').upper()
