@@ -17,26 +17,38 @@ def decide_to_play():
 def play_game():
     answer_str = generate_word_for_game()
     answer_list = list(answer_str)
+    guesses_list = []
+    turns_remaining = 8
     
     print_game_instructions(answer_str)
 
-    guesses_list = []
-    turns_remaining = 8
+    while turns_remaining > 0:
+        guess = guess_character(guesses_list)
+        guesses_list.append(guess)
+        guesses_str = str(' '.join(guesses_list))
 
-    for turn in range(turns_remaining):
-        guess_character(guesses_list)
-        guesses_str = ' '.join(guesses_list)
-        turns_remaining -= 1
+        # Lose a turn if guess is incorrect
+        if guess not in answer_list:
+            turns_remaining -= 1
 
-        # Check guesses_list list against answer
+        # Check guesses_list against answer_list to create what to display
         display_list = [(char.replace(char, "_")) if char not in guesses_list else char for char in answer_list]
         display_str = ' '.join(display_list)
 
+        # Check if solved
+        if display_list == answer_list:
+            print('\nYou solved it!')
+            print(f'The Mystery Word was {answer_str}.')
+            break
+        
+        # Print status report
         print(f'\nTurns remaining: {turns_remaining}')
         print(f'Guesses: {guesses_str}')
         print(f'Mystery Word: {display_str}\n')
-    
-    print_end_game_msg()
+
+        # print(f'guesses_list: {guesses_list}')
+        # print(f'answer_list: {answer_list}')
+        # print(f'display_list: {display_list}\n')
     
 def print_game_instructions(answer_str):
     print('\n' + ('#' * 80))
@@ -50,7 +62,7 @@ def print_game_instructions(answer_str):
 
 def generate_word_for_game():
     # Open words.txt as read
-    file = 'words.txt'
+    file = 'test-word.txt'
     with open(file) as open_file:
         read_file = open_file.read()
     # Turn the file into a list of strings
@@ -66,21 +78,22 @@ def generate_word_for_game():
 
 def guess_character(guesses_list):
     guess = input('Guess a letter: ').upper()
-    if validate_guess(guess, guesses_list) == False:
-        guess_character(guesses_list)
-    else: 
-        return guesses_list.append(guess)
 
-def validate_guess(guess, guesses_list):
+    # Validating the guess
     if len(guess) != 1:
-        print('\nGuess a single letter at a time.')
-        return False
+        print('\nGuess a single letter at a time.\n')
+        return guess_character(guesses_list)
     elif guess.isalpha() == False:
-        print('\nYour guess must be a letter.')
-        return False
+        print('\nYour guess must be a letter.\n')
+        return guess_character(guesses_list)
     elif guess in guesses_list:
-        print(f'You\'ve already guessed {guess}, try again.' + '\n')
-        return False
+        print(f'\nYou\'ve already guessed {guess}, try again.' + '\n')
+        return guess_character(guesses_list)
+    else:
+        return guess
+
+def print_end_game_msg():
+    pass
 
 if __name__ == "__main__":
     decide_to_play()
