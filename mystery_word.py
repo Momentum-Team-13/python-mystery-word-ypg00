@@ -20,12 +20,6 @@ def play_game():
         # Casting the list as a string for cleaner terminal presentation
         display_str = ' '.join(display_list)
 
-        # Check if solved
-        if display_list == ANSWER_LIST:
-            print('\nYou solved it!\n')
-            print(f'The Mystery Word was {ANSWER_STR}.\n')
-            break
-        
         # Lose a turn if guess is incorrect
         if guess not in ANSWER_LIST:
             turns_remaining -= 1
@@ -35,16 +29,28 @@ def play_game():
         print(f'Turns remaining: {turns_remaining}')
         print(f'Guesses: {guesses_str}\n')
         print(f'Mystery Word: {display_str}\n')
+
+        # Check if solved (i.e. Win Message)
+        if display_list == ANSWER_LIST:
+            print('\nYou solved it!\n')
+            print(f'The Mystery Word was {ANSWER_STR}.\n')
+            break
+
+    # Lose Message
+    if turns_remaining == 0:
+        print('\nYou ran out of turns...\n')
+        print(f'The Mystery Word was {ANSWER_STR}.\n')
+        exit()
     
 def decide_to_play():
     print('\n' + ('#' * 80) + '\n')
     decision_to_play = input('Would you like to play Mystery Word, Y/N? ').upper()
-
     if decision_to_play == 'Y':
         pass
     elif decision_to_play == 'N':
         print('\nWell, okay then...')
         print('\n' + ('#' * 80) + '\n')
+        exit()
     else:
         decide_to_play()
 
@@ -56,26 +62,20 @@ def print_game_instructions(ANSWER_STR, turns_remaining):
     print(f'3. The Mystery Word is {len(ANSWER_STR)} characters long.')
     print('\n' + ('#' * 80) + '\n')
     print('Mystery Word: ' + ('_ ' * len(ANSWER_STR)) + '\n')
-    # print(f'Answer: {str(ANSWER_STR)}')
 
 def generate_word_for_game():
     # Open file as read
     file = 'words.txt'
     with open(file) as open_file:
         read_file = open_file.read()
-
-    # Turn the file into a list of strings
+    # Turn the file contents into a list of strings
     available_words = str.split(read_file)
-
     # Create an random index number
     index = random.randint(0, (len(available_words) - 1))
-
     # Select a word for the game using the random index number
     word_str = available_words[index]
-
     # Uppercase the string
     word_str_upper = word_str.upper()
-    
     # Return word for the game
     return word_str_upper
 
@@ -95,7 +95,7 @@ def guess_letter(guesses_list):
     else:
         return guess
 
-def print_end_game_msg():
+def check_if_win_or_lose():
     pass
 
 if __name__ == "__main__":
