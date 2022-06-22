@@ -25,12 +25,14 @@ def play_game():
 
     while len(guesses) < 8:
         guess_character(guesses)
-        print(f'Guesses: {guesses}')
+        guesses_str = ' '.join(guesses)
+        print(f'Guesses: {guesses_str}')
         turns_remaining -= 1
         print(f'Turns remaining: {turns_remaining}\n')
         #check guesses list against answer
-        display_list = [(char.replace(char, "_ ")) if char not in guesses else char for char in answer_list]
-        print(f'Mystery Word: {display_list}')
+        display_list = [(char.replace(char, "_")) if char not in guesses else char for char in answer_list]
+        display_str = ' '.join(display_list)
+        print(f'Mystery Word: {display_str}')
     
 
 def print_game_instructions(answer_str):
